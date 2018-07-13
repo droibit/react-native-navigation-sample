@@ -1,16 +1,20 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component } from "react";
 import {
-  TouchableOpacity,
   Text,
   Button,
   View,
   StyleSheet
 } from "react-native";
+import * as Actions from "../module/actions";
 import { Navigation, Navigator } from 'react-native-navigation';
 import { connect } from 'react-redux';
+import { Dispatch, Action } from "redux";
 
 type Props = {
-  navigator: Navigator
+  navigator: Navigator,
+  counter: number,
+  increment(): void,
+  decrement(): void,
 };
 
 export class ModalScreen extends Component<Props> {
@@ -22,9 +26,21 @@ export class ModalScreen extends Component<Props> {
   }
 
   public render() {
+    const { counter } = this.props;
+    console.log(`render(props.counter=${counter})`);
+
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>MODAL!!!!</Text>
+        <Text style={styles.welcome}>{counter}</Text>
+        <Button
+          title="Increment"
+          onPress={e => this.props.increment()}
+        />
+        <Button
+          title="Decrement"
+          onPress={e => this.props.decrement()}
+        />
       </View>
     );
   }
@@ -44,4 +60,22 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect()(ModalScreen);
+const mapStateToProps = (state: { counter: number }) => {
+  console.log(`render(state.counter=${state.counter})`);
+  return {
+    counter: state.counter,
+  };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => {
+  return {
+    increment: () => {
+      dispatch(Actions.incrementCount())
+    },
+    decrement: () => {
+      dispatch(Actions.decrementCount())
+    },
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalScreen);

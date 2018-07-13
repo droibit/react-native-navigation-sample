@@ -1,6 +1,5 @@
-import React, { Component, ReactNode } from "react";
+import React, { Component } from "react";
 import {
-  TouchableOpacity,
   Text,
   Button,
   View,
@@ -9,9 +8,11 @@ import {
 import { Navigator, NavigatorButtons, NavigatorEvent } from 'react-native-navigation';
 import { connect } from 'react-redux';
 import { SCREEN_SETTINGS, SCREEN_MODAL } from ".";
+import { ScreenStateProps } from "../module/reducer";
 
 type Props = {
   navigator: Navigator,
+  screen: string
 };
 
 const NAV_BUTTON_ID_HOME = "NAV_BUTTON_ID_HOME";
@@ -63,6 +64,7 @@ export class HomeTabScreen extends Component<Props> {
   }
 
   public render() {
+    console.log(`render(state.screen.root=${this.props.screen})`);
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>HOME!!!!</Text>
@@ -89,4 +91,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect()(HomeTabScreen);
+const mapStateToProps = (state: { screen: ScreenStateProps }) => {
+  console.log(`mapStateToProps(state.screen.root=${state.screen.root})`);
+  return {
+    screen: state.screen.root
+  };
+};
+
+export default connect(mapStateToProps)(HomeTabScreen);
